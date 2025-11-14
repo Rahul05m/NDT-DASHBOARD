@@ -25,6 +25,9 @@
   .chart-wrap{height:300px}
   .footer{margin-top:14px;font-size:13px;color:#475569}
   @media(max-width:900px){.grid{grid-template-columns:1fr}.chart-wrap{height:220px}}
+  #chartWrap {max-height: 300px;     /* adjust height as you prefer */
+    overflow-y: auto;      /* forces vertical scroll bar */
+    overflow-x: hidden;    /* avoid sideways scroll */}
 </style>
 </head>
 <body>
