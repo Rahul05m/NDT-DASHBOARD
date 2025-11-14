@@ -122,7 +122,7 @@ const SAMPLE_MASTER = [
   {id:'7', activity:'Half Cell Potential', building:'Plant 03', qty:40, unitRate:1000},
   {id:'8', activity:'Chloride Test', building:'Plant 03', qty:20, unitRate:2000},
   {id:'9', activity:'UTG Test', building:'Plant 03', qty:150, unitRate:1000},
-  {id:'10', activity:'DPT Test', building:'Plant 03', qty:150, unitRate:1000},
+  {id:'10', activity:'DPT Test', building:'Plant 04', qty:150, unitRate:1000},
 ];
 
 // Storage keys
@@ -256,11 +256,17 @@ function renderDailyTable(logs){
 function exportCSV(master, logs){
   const rows = computeTotals(master, logs);
   const header = ['WBS','Activity','Building','Planned','Completed','%','Remaining','Planned Amount','Earned Value'];
-  const csv = [header.join(',')].concat(rows.map(r => [r.wbs, `"${r.activity}"`, `"${r.building}"`, r.planned, r.completed, (r.pctComplete*100).toFixed(1)+'%', r.remaining, r.plannedAmount, r.earnedValue].join(','))).join('\\n');
-  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const csvRows = [ header.join(';') ];
+  rows.forEach(r=>{
+    const row = [r.wbs, r.activity, r.building, r.planned, r.completed,
+                 (r.pctComplete*100).toFixed(1) + '%', r.remaining, r.plannedAmount, r.earnedValue];
+    // quote fields that may contain commas/linebreaks
+    csvRows.push(row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';'));
+  });
+  const blob = new Blob([csvRows.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = 'ndt_progress_export.csv'; a.click(); URL.revokeObjectURL(url);
 }
-
 // data init
 let {master, logs} = loadData();
 renderMasterTable(master, logs);
