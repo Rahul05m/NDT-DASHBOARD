@@ -54,7 +54,6 @@
   <div class="item">
     <div class="small">Status</div>
     <div id="statusCounts" style="font-weight:700">Pending:5 • Ongoing:5 • Completed:0</div>
-    <div class="small muted">Counts by activity</div>
   </div>
 </div>
 
@@ -236,7 +235,7 @@ function renderKPIs(rows, master){
   document.getElementById('earnedVal').textContent = formatINR(totalEarned);
   document.getElementById('overallPct').textContent = pct(overall);
   document.getElementById('overallBar').style.width = (overall*100) + '%';
-  document.getElementById('statusCounts').textContent = `Pending:${pending} • Ongoing:${ongoing} • Completed:${completed}`;
+  document.getElementById('statusCounts').innerHTML =`Pending: ${pending}<br>Ongoing: ${ongoing}<br>Completed: ${completed}`;
 }
 
 // render daily logs table
