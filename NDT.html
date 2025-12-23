@@ -1,0 +1,325 @@
+<!doctype html><html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NDT Execution Dashboard</title>
+<style>
+  :root{--bg:#f3f4f6;--card:#ffffff;--accent:#0ea5e9;--good:#16a34a;--warn:#f59e0b;--bad:#ef4444;}
+  body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial; background:var(--bg); margin:0; padding:20px; color:#0f172a;}
+  .container{max-width:1100px;margin:0 auto;}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  h1{font-size:20px;margin:0;}
+  .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+  .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 2px rgba(2,6,23,0.06);}
+  .kpi{display: flex;flex-direction: column;/* force vertical */gap: 12px;}
+
+  .kpi .item{flex:1;padding:10px;border-radius:6px;background:#fbfdff;}
+  .small{font-size:12px;color:#475569}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:8px;border-bottom:1px solid #eef2f7;text-align:left}
+  th{background:#fafafa;position:sticky;top:0}
+  input[type="number"], input[type="text"], input[type="date"], select{padding:6px;border:1px solid #e6eef6;border-radius:4px;width:100%;box-sizing:border-box}
+  .btn{background:var(--accent);color:white;padding:8px 10px;border-radius:6px;border:0;cursor:pointer}
+  .green{background:var(--good);color:white}
+  .red{background:var(--bad);color:white}
+  .muted{color:#64748b;font-size:13px}
+  .flex{display:flex;gap:8px;align-items:center;}
+  .chart-wrap{height:300px}
+  .footer{margin-top:14px;font-size:13px;color:#475569}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}.chart-wrap{height:220px}}
+  #chartWrap {max-height: 220px;     /* adjust height as you prefer */
+    overflow-y: auto;      /* forces vertical scroll bar */
+    overflow-x: hidden;    /* avoid sideways scroll */}
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+      <h1>NDT Execution Dashboard&amp; Paint Stripping</h1>
+      <div class="flex"><button class="btn" id="exportCsv">Export CSV</button></div>
+    </header>
+  <div class="grid">
+    <div class="card" style="margin-bottom:12px">
+      <h3 style="margin:0 0 8px 0">Activity Progress</h3>
+      <div class="chart-wrap card" id="chartWrap" style="padding:10px"><svg width="100%" height="330"><text x="6" y="24" font-size="12" fill="#0f172a">CAPO Test</text><rect x="220" y="10" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="10" width="54" height="22" fill="#f59e0b"></rect><text x="284" y="24" font-size="12" fill="#062a3a">12.5%</text><text x="6" y="54" font-size="12" fill="#0f172a">Core Test</text><rect x="220" y="40" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="40" width="109" height="22" fill="#f59e0b"></rect><text x="339" y="54" font-size="12" fill="#062a3a">25%</text><text x="6" y="84" font-size="12" fill="#0f172a">Rebound Hammer</text><rect x="220" y="70" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="70" width="22" height="22" fill="#f59e0b"></rect><text x="252" y="84" font-size="12" fill="#062a3a">5%</text><text x="6" y="114" font-size="12" fill="#0f172a">UPV Test</text><rect x="220" y="100" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="100" width="12" height="22" fill="#f59e0b"></rect><text x="242" y="114" font-size="12" fill="#062a3a">2.8%</text><text x="6" y="144" font-size="12" fill="#0f172a">Impulse Response</text><rect x="220" y="130" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="130" width="0" height="22" fill="#e11d48"></rect><text x="230" y="144" font-size="12" fill="#062a3a">0%</text><text x="6" y="174" font-size="12" fill="#0f172a">Carbonation Test</text><rect x="220" y="160" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="160" width="0" height="22" fill="#e11d48"></rect><text x="230" y="174" font-size="12" fill="#062a3a">0%</text><text x="6" y="204" font-size="12" fill="#0f172a">Half Cell Potential</text><rect x="220" y="190" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="190" width="0" height="22" fill="#e11d48"></rect><text x="230" y="204" font-size="12" fill="#062a3a">0%</text><text x="6" y="234" font-size="12" fill="#0f172a">Chloride Test</text><rect x="220" y="220" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="220" width="0" height="22" fill="#e11d48"></rect><text x="230" y="234" font-size="12" fill="#062a3a">0%</text><text x="6" y="264" font-size="12" fill="#0f172a">UTG Test</text><rect x="220" y="250" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="250" width="15" height="22" fill="#f59e0b"></rect><text x="245" y="264" font-size="12" fill="#062a3a">3.3%</text><text x="6" y="294" font-size="12" fill="#0f172a">DPT Test</text><rect x="220" y="280" width="435" height="22" fill="#eef2f6"></rect><rect x="220" y="280" width="0" height="22" fill="#e11d48"></rect><text x="230" y="294" font-size="12" fill="#062a3a">0%</text></svg></div>
+    </div>    
+    <div class="kpi card" style="margin-bottom:12px">
+      <div class="item">
+        <div class="small">Overall Progress</div>
+        <div id="overallPct" style="font-weight:700;font-size:20px">0.0%</div>
+        <div style="height:8px;background:#eef2f6;border-radius:6px;margin-top:8px">
+        <div id="overallBar" style="height: 8px; background: linear-gradient(90deg, rgb(14, 165, 233), rgb(52, 211, 153)); width: 4.86111%; border-radius: 6px;">
+        </div>
+      </div>
+      </div>
+      <div class="item">
+        <div class="small">Planned Amount</div>
+        <div id="plannedAmt" style="font-weight:700">₹ 0</div>
+        <div class="small muted">Total scheduled value</div>
+      </div>
+      <div class="item">
+        <div class="small">Earned Value</div>
+        <div id="earnedVal" style="font-weight:700">₹ 0</div>
+        <div class="small muted">Value based on progress</div>
+      </div>
+      <div class="item">
+        <div class="small">Status</div>
+        <div id="statusCounts" style="font-weight:700">Pending:0 • Ongoing:0 • Completed:0</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:10px;overflow:auto;max-height:220px">
+        <table id="masterTable">
+          <thead><tr><th>WBS</th><th>Activity</th><th>Building</th><th>Planned</th><th>Completed</th><th>%</th><th>Remaining</th><th>Earned Value</th></tr></thead>
+          <tbody><tr><td>1</td><td>CAPO Test</td><td>Plant 03</td><td>40</td><td>5</td><td>12.5%</td><td>35</td><td>₹ 30,000</td></tr><tr><td>2</td><td>Core Test</td><td>Plant 03</td><td>20</td><td>5</td><td>25%</td><td>15</td><td>₹ 10,000</td></tr><tr><td>3</td><td>Rebound Hammer</td><td>Plant 03</td><td>100</td><td>5</td><td>5%</td><td>95</td><td>₹ 750</td></tr><tr><td>4</td><td>UPV Test</td><td>Plant 03</td><td>180</td><td>5</td><td>2.8%</td><td>175</td><td>₹ 2,000</td></tr><tr><td>5</td><td>Impulse Response</td><td>Plant 03</td><td>1000</td><td>0</td><td>0%</td><td>1000</td><td>₹ 0</td></tr><tr><td>6</td><td>Carbonation Test</td><td>Plant 03</td><td>40</td><td>0</td><td>0%</td><td>40</td><td>₹ 0</td></tr><tr><td>7</td><td>Half Cell Potential</td><td>Plant 03</td><td>40</td><td>0</td><td>0%</td><td>40</td><td>₹ 0</td></tr><tr><td>8</td><td>Chloride Test</td><td>Plant 03</td><td>20</td><td>0</td><td>0%</td><td>20</td><td>₹ 0</td></tr><tr><td>9</td><td>UTG Test</td><td>Plant 03</td><td>150</td><td>5</td><td>3.3%</td><td>145</td><td>₹ 5,000</td></tr><tr><td>10</td><td>DPT Test</td><td>Plant 03</td><td>150</td><td>0</td><td>0%</td><td>150</td><td>₹ 0</td></tr></tbody>
+        </table>
+      </div>
+<div class="grid">
+  <div>
+   
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin:0 0 8px 0">Master Plan (edit qty / rate)</h3>
+      <div style="overflow:auto"><table id="editMaster">
+        <thead><tr><th>WBS</th><th>Activity</th><th>Planned Qty</th><th>Unit Rate ₹</th></tr></thead>
+        <tbody><tr><td>1</td><td>CAPO Test</td><td><input data-idx="0" data-field="qty" type="number" min="0" value="40"></td><td><input data-idx="0" data-field="unitRate" type="number" min="0" value="6000"></td></tr><tr><td>2</td><td>Core Test</td><td><input data-idx="1" data-field="qty" type="number" min="0" value="20"></td><td><input data-idx="1" data-field="unitRate" type="number" min="0" value="2000"></td></tr><tr><td>3</td><td>Rebound Hammer</td><td><input data-idx="2" data-field="qty" type="number" min="0" value="100"></td><td><input data-idx="2" data-field="unitRate" type="number" min="0" value="150"></td></tr><tr><td>4</td><td>UPV Test</td><td><input data-idx="3" data-field="qty" type="number" min="0" value="180"></td><td><input data-idx="3" data-field="unitRate" type="number" min="0" value="400"></td></tr><tr><td>5</td><td>Impulse Response</td><td><input data-idx="4" data-field="qty" type="number" min="0" value="1000"></td><td><input data-idx="4" data-field="unitRate" type="number" min="0" value="1000"></td></tr><tr><td>6</td><td>Carbonation Test</td><td><input data-idx="5" data-field="qty" type="number" min="0" value="40"></td><td><input data-idx="5" data-field="unitRate" type="number" min="0" value="250"></td></tr><tr><td>7</td><td>Half Cell Potential</td><td><input data-idx="6" data-field="qty" type="number" min="0" value="40"></td><td><input data-idx="6" data-field="unitRate" type="number" min="0" value="1000"></td></tr><tr><td>8</td><td>Chloride Test</td><td><input data-idx="7" data-field="qty" type="number" min="0" value="20"></td><td><input data-idx="7" data-field="unitRate" type="number" min="0" value="2000"></td></tr><tr><td>9</td><td>UTG Test</td><td><input data-idx="8" data-field="qty" type="number" min="0" value="150"></td><td><input data-idx="8" data-field="unitRate" type="number" min="0" value="1000"></td></tr><tr><td>10</td><td>DPT Test</td><td><input data-idx="9" data-field="qty" type="number" min="0" value="150"></td><td><input data-idx="9" data-field="unitRate" type="number" min="0" value="1000"></td></tr></tbody>
+      </table></div>
+      <div style="margin-top:8px" class="flex"><button id="addActivity" class="btn">Add Activity</button><button id="resetSample" class="btn" style="background:#64748b">Reset Sample</button></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h3 style="margin:0 0 8px 0">Add Daily Log</h3>
+      <form id="logForm">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <input type="date" id="logDate" required="">
+          <select id="logActivity"><option value="CAPO Test">CAPO Test (Plant 03)</option><option value="Core Test">Core Test (Plant 03)</option><option value="Rebound Hammer">Rebound Hammer (Plant 03)</option><option value="UPV Test">UPV Test (Plant 03)</option><option value="Impulse Response">Impulse Response (Plant 03)</option><option value="Carbonation Test">Carbonation Test (Plant 03)</option><option value="Half Cell Potential">Half Cell Potential (Plant 03)</option><option value="Chloride Test">Chloride Test (Plant 03)</option><option value="UTG Test">UTG Test (Plant 03)</option><option value="DPT Test">DPT Test (Plant 03)</option></select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <input type="number" id="logCompleted" placeholder="Completed qty" min="0" value="0" required="">
+          <button class="btn" style="width:100%" type="submit">Add Log</button>
+        </div>
+      </form>
+      <div style="margin-top:10px;overflow:auto;max-height:300px">
+        <table id="dailyTable"><thead><tr><th>Date</th><th>Activity</th><th>Completed</th><th>Action</th></tr></thead><tbody><tr><td>2025-11-06</td><td>CAPO Test</td><td>5</td><td><button data-idx="0" class="btn red">Remove</button></td></tr><tr><td>2025-11-06</td><td>Core Test</td><td>5</td><td><button data-idx="1" class="btn red">Remove</button></td></tr><tr><td>2025-11-06</td><td>Rebound Hammer</td><td>5</td><td><button data-idx="2" class="btn red">Remove</button></td></tr><tr><td>2025-11-06</td><td>UPV Test</td><td>5</td><td><button data-idx="3" class="btn red">Remove</button></td></tr><tr><td>2025-11-06</td><td>UTG Test</td><td>5</td><td><button data-idx="4" class="btn red">Remove</button></td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin:0 0 8px 0">Quick Controls</h3>
+      <div style="display:flex;gap:8px"><button id="clearLogs" class="btn" style="background:#ef4444">Clear Logs</button><button id="downloadHtml" class="btn">Download HTML</button></div>
+      <div class="footer">This single HTML file stores data in your browser (localStorage). No server needed. Works offline after first load.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+// Self-contained NDT Dashboard JS (no external libs). Data saves to localStorage.
+// Initial sample master plan: includes both buildings as requested.
+const SAMPLE_MASTER = [];
+
+// Storage keys
+const KEY_MASTER = 'ndt_master_v1';
+const KEY_LOGS = 'ndt_logs_v1';
+
+function loadData(){
+  const rawMaster = localStorage.getItem(KEY_MASTER);
+  const rawLogs = localStorage.getItem(KEY_LOGS);
+  let master = rawMaster ? JSON.parse(rawMaster) : SAMPLE_MASTER.slice();
+  let logs = rawLogs ? JSON.parse(rawLogs) : [];
+  return {master, logs};
+}
+
+function saveData(master, logs){
+  localStorage.setItem(KEY_MASTER, JSON.stringify(master));
+  localStorage.setItem(KEY_LOGS, JSON.stringify(logs));
+}
+
+function formatINR(n){ return '₹ ' + Number(n||0).toLocaleString('en-IN'); }
+function pct(v){ return (Math.round((v||0)*1000)/10) + '%'; } // one decimal
+
+// calculate totals per activity
+function computeTotals(master, logs){
+  const map = {};
+  master.forEach(r => map[r.activity] = {planned: r.qty, unitRate: r.unitRate, plannedAmount: r.qty*(r.unitRate||0), completed:0});
+  logs.forEach(l => { if(!l.activity) return; map[l.activity] = map[l.activity] || {planned:0,unitRate:0,plannedAmount:0,completed:0}; map[l.activity].completed += Number(l.completed||0); });
+  const rows = master.map(r => {
+    const t = map[r.activity] || {planned:r.qty,unitRate:r.unitRate,plannedAmount:r.qty*(r.unitRate||0),completed:0};
+    const completed = t.completed || 0;
+    const pctComplete = t.planned === 0 ? (completed===0?0:1) : Math.min(1, completed / t.planned);
+    const remaining = Math.max(0, t.planned - completed);
+    const earnedValue = Math.round((t.plannedAmount||0) * pctComplete);
+    return {wbs:r.id, activity:r.activity, building:r.building, planned:r.qty, completed, pctComplete, remaining, earnedValue, plannedAmount: t.plannedAmount||0};
+  });
+  return rows;
+}
+
+// render functions
+function renderMasterTable(master, logs){
+  const tbody = document.querySelector('#masterTable tbody'); tbody.innerHTML='';
+  const rows = computeTotals(master, logs);
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.wbs}</td><td>${r.activity}</td><td>${r.building}</td><td>${r.planned}</td><td>${r.completed}</td><td>${pct(r.pctComplete)}</td><td>${r.remaining}</td><td>${formatINR(r.earnedValue)}</td>`;
+    tbody.appendChild(tr);
+  });
+  renderChart(rows);
+  renderKPIs(rows, master);
+}
+
+function renderEditMaster(master){
+  const tbody = document.querySelector('#editMaster tbody'); tbody.innerHTML='';
+  const select = document.querySelector('#logActivity'); select.innerHTML='';
+  master.forEach((r, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.id}</td><td>${r.activity}</td><td><input data-idx="${idx}" data-field="qty" type="number" min="0" value="${r.qty}" /></td><td><input data-idx="${idx}" data-field="unitRate" type="number" min="0" value="${r.unitRate}" /></td>`;
+    tbody.appendChild(tr);
+    const opt = document.createElement('option'); opt.value = r.activity; opt.textContent = r.activity + ' ('+r.building+')'; select.appendChild(opt);
+  });
+  // attach listeners for inputs
+  document.querySelectorAll('#editMaster input').forEach(inp => {
+    inp.addEventListener('change', (e)=>{
+      const i = Number(e.target.dataset.idx); const f = e.target.dataset.field; const v = Number(e.target.value)||0;
+      master[i][f] = v;
+      saveData(master, logs);
+      renderMasterTable(master, logs);
+      renderEditMaster(master);
+    });
+  });
+}
+
+let chartSvg = null;
+function renderChart(rows){
+  const wrap = document.getElementById('chartWrap'); wrap.innerHTML='';
+  // simple horizontal bars using SVG
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const width = wrap.clientWidth - 20; const barH = 22; const gap = 8;
+  const height = rows.length*(barH+gap) + 30;
+  const svg = document.createElementNS(svgNS,'svg'); svg.setAttribute('width','100%'); svg.setAttribute('height', height);
+  let y = 10;
+  rows.forEach(r => {
+    const label = document.createElementNS(svgNS,'text');
+    label.setAttribute('x',6); label.setAttribute('y', y+14); label.setAttribute('font-size',12); label.setAttribute('fill','#0f172a'); label.textContent = r.activity;
+    svg.appendChild(label);
+    const bg = document.createElementNS(svgNS,'rect'); bg.setAttribute('x',220); bg.setAttribute('y', y); bg.setAttribute('width', Math.max(100, width-240)); bg.setAttribute('height', barH); bg.setAttribute('fill','#eef2f6');
+    svg.appendChild(bg);
+    const valW = Math.round((width-240) * r.pctComplete);
+    const bar = document.createElementNS(svgNS,'rect'); bar.setAttribute('x',220); bar.setAttribute('y', y); bar.setAttribute('width', valW); bar.setAttribute('height', barH); bar.setAttribute('fill', r.pctComplete>=1? '#16a34a' : (r.pctComplete>0? '#f59e0b' : '#e11d48'));
+    svg.appendChild(bar);
+    const txt = document.createElementNS(svgNS,'text'); txt.setAttribute('x', 230 + Math.min(valW, (width-240)-50)); txt.setAttribute('y', y+14); txt.setAttribute('font-size',12); txt.setAttribute('fill','#062a3a'); txt.textContent = pct(r.pctComplete);
+    svg.appendChild(txt);
+    y += barH + gap;
+  });
+  wrap.appendChild(svg);
+}
+
+// KPIs
+function renderKPIs(rows, master){
+  const totalPlanned = master.reduce((s,r)=>s + (r.qty*(r.unitRate||0)),0);
+  const totalEarned = rows.reduce((s,r)=>s + (r.earnedValue||0),0);
+  const overall = master.length ? (rows.reduce((s,r)=> s + r.pctComplete,0) / master.length) : 0;
+  const completed = rows.filter(r=> r.remaining===0 && r.planned>0).length;
+  const ongoing = rows.filter(r=> r.pctComplete>0 && r.pctComplete<1).length;
+  const pending = rows.filter(r=> r.pctComplete===0).length;
+  document.getElementById('plannedAmt').textContent = formatINR(totalPlanned);
+  document.getElementById('earnedVal').textContent = formatINR(totalEarned);
+  document.getElementById('overallPct').textContent = pct(overall);
+  document.getElementById('overallBar').style.width = (overall*100) + '%';
+  document.getElementById('statusCounts').innerHTML =`Pending: ${pending}<br>Ongoing: ${ongoing}<br>Completed: ${completed}`;
+}
+
+// render daily logs table
+function renderDailyTable(logs){
+  const tbody = document.querySelector('#dailyTable tbody'); tbody.innerHTML='';
+  logs.forEach((l, idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${l.date}</td><td>${l.activity}</td><td>${l.completed}</td><td><button data-idx="${idx}" class="btn red">Remove</button></td>`;
+    tbody.appendChild(tr);
+  });
+  // remove handlers
+  document.querySelectorAll('#dailyTable button').forEach(b=> b.addEventListener('click', (e)=>{
+    const i = Number(e.target.dataset.idx);
+    logs.splice(i,1);
+    saveData(master, logs);
+    renderDailyTable(logs); renderMasterTable(master, logs); renderEditMaster(master);
+  }));
+}
+
+// CSV export
+function exportCSV(master, logs){
+  const rows = computeTotals(master, logs);
+  const header = ['WBS','Activity','Building','Planned','Completed','%','Remaining','Planned Amount','Earned Value'];
+  const csvRows = [ header.join(';') ];
+  rows.forEach(r=>{
+    const row = [r.wbs, r.activity, r.building, r.planned, r.completed,
+                 (r.pctComplete*100).toFixed(1) + '%', r.remaining, r.plannedAmount, r.earnedValue];
+    // quote fields that may contain commas/linebreaks
+    csvRows.push(row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';'));
+  });
+  const blob = new Blob([csvRows.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'ndt_progress_export.csv'; a.click(); URL.revokeObjectURL(url);
+}
+// data init
+let {master, logs} = loadData();
+renderMasterTable(master, logs);
+renderEditMaster(master);
+renderDailyTable(logs);
+
+// form actions
+document.getElementById('logForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const date = document.getElementById('logDate').value;
+  const activity = document.getElementById('logActivity').value;
+  const completed = Number(document.getElementById('logCompleted').value) || 0;
+  if(!date || !activity) return alert('Date and activity required');
+  logs.push({date, activity, completed});
+  saveData(master, logs);
+  renderDailyTable(logs); renderMasterTable(master, logs);
+  document.getElementById('logCompleted').value = 0;
+});
+
+// edit master add
+document.getElementById('addActivity').addEventListener('click', ()=>{
+  const id = prompt('WBS code (e.g. 12.0)') || `x.${Math.floor(Math.random()*999)}`;
+  const activity = prompt('Activity name (e.g. CAPO Test)') || 'New Activity';
+  const building = prompt('Building name (Plant 03 or Paint Stripping)') || 'Plant 03';
+  const qty = Number(prompt('Planned qty')||0);
+  const rate = Number(prompt('Unit rate')||0);
+  master.push({id, activity, building, qty, unitRate: rate});
+  saveData(master, logs);
+  renderEditMaster(master); renderMasterTable(master, logs); renderDailyTable(logs);
+});
+
+// reset sample
+document.getElementById('resetSample').addEventListener('click', ()=>{
+  if(!confirm('Reset master plan to original sample? This will overwrite your master list but keep logs.')) return;
+  master = SAMPLE_MASTER.slice();
+  saveData(master, logs);
+  renderEditMaster(master); renderMasterTable(master, logs); renderDailyTable(logs);
+});
+
+// clear logs
+document.getElementById('clearLogs').addEventListener('click', ()=>{
+  if(!confirm('Clear all daily logs? This cannot be undone.')) return;
+  logs = []; saveData(master, logs); renderDailyTable(logs); renderMasterTable(master, logs);
+});
+
+// export CSV
+document.getElementById('exportCsv').addEventListener('click', ()=> exportCSV(master, logs));
+
+// download as standalone HTML (current document)
+document.getElementById('downloadHtml').addEventListener('click', ()=>{
+  const doc = '<!doctype html>\\n' + document.documentElement.outerHTML;
+  const blob = new Blob([doc], {type:'text/html'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'NDT_Execution_Dashboard.html'; a.click(); URL.revokeObjectURL(url);
+});
+
+// save when leaving
+window.addEventListener('beforeunload', ()=> saveData(master, logs));
+</script>
+</body>
+</html>
